@@ -31,3 +31,32 @@ produtos = [
     {"id": 29, "name": "coberta", "price": 55.99},
     {"id": 30, "name": "sofa", "price": 600.15}
 ]
+
+from flask import Flask, jsonify, request
+app = Flask(__name__)
+
+@app.get("/products")
+def list_products():
+    return jsonify(produtos),200
+
+@app.get("/products/<product_id>")
+def get(product_id:int):
+    return produtos[int(product_id) - 1], 200
+
+@app.post("/products")
+def create():
+    data = request.get_json()
+    produtos.append(data)
+    return jsonify(data), 201
+
+
+@app.patch("/products/<product_id>")
+def update(product_id: int):
+    data = request.get_json()
+    produtos[int(product_id) -1] = data
+    return  jsonify(None), 204
+
+@app.delete("/products/<product_id>")
+def delete(product_id: int):
+    produtos.pop(int(product_id)-1)
+    return jsonify(None), 204
